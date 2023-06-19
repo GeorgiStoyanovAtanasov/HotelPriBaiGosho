@@ -33,13 +33,7 @@ public class Main {
                 int part1 = Integer.parseInt(parts[0]);
                 int part2 = Integer.parseInt(parts[1]);
                 int part3 = Integer.parseInt(parts[2]);
-                System.out.println("End date: ");
-                String EndDateChoice = sc.next();
-                System.out.println("Enter notes: ");
-                String notes = sc.next();
-                System.out.println("Reservation was created!");
-                int n = freeRooms.indexOf(roomChoice);
-                freeRooms.remove(n);
+
 
 
             }
