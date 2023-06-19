@@ -24,22 +24,29 @@ public class Main {
             System.out.println("Enter room: ");
             int roomChoice = sc.nextInt();
             if (freeRooms.contains(roomChoice)) {
-                System.out.println("Start date: ");
-                String dateChoice = sc.next();
+                String userInput = sc.next();
 
 
-                String[] result = dateChoice.split("//.");
-                System.out.println(result.length);
-                System.out.println(result[0]);
-                System.out.println(result[1]);
-                System.out.println(result[2]);
+                String[] parts = userInput.split("\\.");
 
+
+                int part1 = Integer.parseInt(parts[0]);
+                int part2 = Integer.parseInt(parts[1]);
+                int part3 = Integer.parseInt(parts[2]);
+                System.out.println("End date: ");
+                String EndDateChoice = sc.next();
+                System.out.println("Enter notes: ");
+                String notes = sc.next();
+                System.out.println("Reservation was created!");
+                int n = freeRooms.indexOf(roomChoice);
+                freeRooms.remove(n);
 
 
             }
             // System.out.println("The room which are currently free are " + freeRooms);
 
         }
+        System.out.println(freeRooms);
 
     }
 }
