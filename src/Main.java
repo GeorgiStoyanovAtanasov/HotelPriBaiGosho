@@ -1,10 +1,6 @@
-
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// i will make an array list for all the rooms and fill it using for loop, let's  say the number of rooms will be 203 and when the person asks to list all free rooms i would simply print the array list.
-//
 public class Main {
     public static void main(String[] args) {
         ArrayList<Integer> freeRooms = new ArrayList<Integer>();
@@ -13,34 +9,66 @@ public class Main {
 
                 freeRooms.add(i);
             }
-
         }
-
-
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please select what you want to do (1 - Make a reservation; 2- List free rooms; 3 - Checkout room; 4 - Stats; 5 - Find a room; 6 - Update a room)");
-        int choice = sc.nextInt();
-        if (choice == 1) {
-            System.out.println("Enter room: ");
-            int roomChoice = sc.nextInt();
-            if (freeRooms.contains(roomChoice)) {
-                String userInput = sc.next();
+
+        int choice;
+
+        do {
+            System.out.println("Please select what you want to do (1 - Make a reservation; 2- List free rooms; 3 - Checkout room; 4 - Stats; 5 - Find a room; 6 - Update a room; 7 - Reset)");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter room: ");
+                    int roomChoice = sc.nextInt();
+                    if (freeRooms.contains(roomChoice)) {
+                        System.out.println("Enter starting date");
+                        String userInput = sc.next();
 
 
-                String[] parts = userInput.split("\\.");
+                        String[] parts = userInput.split("\\.");
 
 
-                int part1 = Integer.parseInt(parts[0]);
-                int part2 = Integer.parseInt(parts[1]);
-                int part3 = Integer.parseInt(parts[2]);
+                        int part1 = Integer.parseInt(parts[0]);
+                        int part2 = Integer.parseInt(parts[1]);
+                        int part3 = Integer.parseInt(parts[2]);
+                        System.out.println("End date: ");
+                        String EndDateChoice = sc.next();
+                        System.out.println("Enter notes: ");
+                        String notes = sc.next();
+                        System.out.println("Reservation was created!");
+                        int n = freeRooms.indexOf(roomChoice);
+                        freeRooms.remove(n);
+                    }
+
+                    break;
+                case 2:
+                    System.out.println();
+                    System.out.println("The room which are currently free are " + freeRooms);
+
+                    break;
+                case 3:
 
 
+                    break;
+                case 4:
 
+
+                    break;
+                case 5:
+
+                    break;
+                case 6:
+
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
             }
-            // System.out.println("The room which are currently free are " + freeRooms);
-
-        }
-        System.out.println(freeRooms);
-
+        } while (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 5 || choice == 6 );
     }
+
+
 }
