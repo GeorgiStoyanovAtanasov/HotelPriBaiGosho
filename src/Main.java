@@ -15,7 +15,7 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("Please select what you want to do (1 - Make a reservation; 2- List free rooms; 3 - Checkout room; 4 - Stats; 5 - Find a room; 6 - Update a room; 7 - Reset)");
+            System.out.println("Please select what you want to do (1 - Make a reservation; 2- List free rooms; 3 - Checkout room; 4 - Stats; 5 - Find a room; 6 - Update a room; 7 - Exit)");
             choice = sc.nextInt();
 
             switch (choice) {
@@ -24,10 +24,10 @@ public class Main {
                     int roomChoice = sc.nextInt();
                     if (freeRooms.contains(roomChoice)) {
                         System.out.println("Enter starting date");
-                        String userInput = sc.next();
+                        String startingDateForInputOne = sc.next();
 
 
-                        String[] parts = userInput.split("\\.");
+                        String[] parts = startingDateForInputOne.split("\\.");
 
 
                         int part1 = Integer.parseInt(parts[0]);
@@ -49,6 +49,61 @@ public class Main {
 
                     break;
                 case 3:
+                    System.out.println("Enter starting date: ");
+                    String startingDateForInputTwo = sc.next();
+
+
+                    String[] parts = startingDateForInputTwo.split("\\.");
+
+
+                    int firstPartForInputTwo = Integer.parseInt(parts[0]);
+                    int secondPartForInputTwo = Integer.parseInt(parts[1]);
+                    int thirdPartForInputTwo = Integer.parseInt(parts[2]);
+                    if (thirdPartForInputTwo != 2023 && secondPartForInputTwo <= 0 && secondPartForInputTwo > 12 && firstPartForInputTwo < 0 && firstPartForInputTwo >= 31) {
+                        System.exit(0);
+                    }
+
+
+                    if (thirdPartForInputTwo == 2023 && secondPartForInputTwo >= 5 && secondPartForInputTwo <= 13 ) {
+                        System.out.println(30);
+                        System.out.println(12);
+                        System.out.println(36);
+                        System.out.println(81);
+                        System.out.println(15);
+                    }
+
+                    else if (thirdPartForInputTwo == 2023 && secondPartForInputTwo >= 2 && secondPartForInputTwo < 5 ) {
+                        System.out.println(6);
+                        System.out.println(72);
+                        System.out.println(96);
+                        System.out.println(3);
+                        System.out.println(75);
+
+
+
+
+
+                    }
+
+                    else if (thirdPartForInputTwo == 2023 && secondPartForInputTwo == 1 ) {
+                        System.out.println(81);
+                        System.out.println(45);
+                        System.out.println(102);
+                        System.out.println(57);
+                        System.out.println(63);
+
+
+
+
+
+                    }
+
+
+                    else {
+                        System.out.println("Sorry!");
+                        System.exit(0);
+                    }
+
 
 
                     break;
@@ -67,8 +122,9 @@ public class Main {
                     System.out.println("Invalid choice. Please try again.");
                     break;
             }
-        } while (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 5 || choice == 6 );
+        } while (choice == 1 || choice == 2 || choice == 3 || choice == 4 || choice == 5 || choice == 6);
     }
 
 
 }
+
