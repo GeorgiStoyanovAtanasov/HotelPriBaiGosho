@@ -3,11 +3,33 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class HotelPriBaiGosho {
+    static int[] safeStartDaysArr = new int[100];
+    static int[] safeStartMonthsArr = new int[100];
+    static int[] safeStartYearsArr = new int[100];
+    static int[] safeEndDaysArr = new int[100];
+    static int[] safeEndMonthsArr = new int[100];
+    static int[] safeEndYearsArr = new int[100];
+    static int[] numberOfBedsArr = {1, 1, 1, 1, 2, 2, 2, 2, 3, 3};
+    static String [] additionalServices = new String [100];
     static List<Room> roomList = new ArrayList<>();
     static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
+
+
+    public static void printWelcomeMessage() {
+        System.out.println("------------------------------------------------------------------------------------------------------");
+        System.out.println("                                       WELCOME TO HOTEL priBaiGosho!");
+        System.out.println("------------------------------------------------------------------------------------------------------");
+    }
+
+    public static void printMenu() {
+
+        System.out.println("Please select what you want to do \n 1 - Make a reservation; \n 2 - List free rooms; \n 3 - Checkout room; \n 4 - Stats; \n 5 - Find a room; \n 6 - Update a room; \n " );
+
+    }
     public static void main(String[] args) throws ParseException {
         printWelcomeMessage();
+
         Scanner scanner = new Scanner(System.in);
 
         boolean continueProgram = true;
@@ -33,7 +55,9 @@ public class HotelPriBaiGosho {
                     findRoom();
                     break;
                 case 6:
-                    updateRoom();
+                    //System.out.println("Enter the number of the room would would like to update: ");
+                    //int number = scanner.nextByte();
+                    //updateRoom(number);
                     break;
                 default:
                     System.out.println("Please select a valid option!");
@@ -42,18 +66,6 @@ public class HotelPriBaiGosho {
 
             continueProgram = askIfUserWantsToContinue();
         }
-    }
-
-    public static void printWelcomeMessage() {
-        System.out.println("------------------------------------------------------------------------------------------------------");
-        System.out.println("                                       WELCOME TO HOTEL priBaiGosho!");
-        System.out.println("------------------------------------------------------------------------------------------------------");
-    }
-
-    public static void printMenu() {
-
-        System.out.println("Please select what you want to do \n 1 - Make a reservation; \n 2 - List free rooms; \n 3 - Checkout room; \n 4 - Stats; \n 5 - Find a room; \n 6 - Update a room; \n ");
-
     }
 
     public static boolean askIfUserWantsToContinue() {
@@ -66,7 +78,6 @@ public class HotelPriBaiGosho {
         }
         return continueProgram;
     }
-
     public static void makeReservation() throws ParseException {
         System.out.println("=========================================");
         System.out.println("           MAKE A RESERVATION");
@@ -75,6 +86,9 @@ public class HotelPriBaiGosho {
 
         System.out.print("Please write the room number you want to reserve (1-10): ");
         int roomNumber = scanner.nextInt();
+
+
+        cancelTheWrongReservationForUpdateARoom(roomNumber);
         scanner.nextLine();
 
         if (roomNumber < 1 || roomNumber > 10) {
@@ -95,7 +109,7 @@ public class HotelPriBaiGosho {
         System.out.println("Enter some information about the customer: ");
         String information = scanner.nextLine();
 
-        //Room room = new Room(roomNumber, startDate, endDate, information);
+        Room room = new Room(roomNumber, startDate, endDate, information);
         roomList.add(room);
         Date currentDate = new Date();
         if (startDate.before(currentDate)) {
@@ -116,6 +130,18 @@ public class HotelPriBaiGosho {
         System.out.println("The end day is: " + dateFormat.format(endDate) + "   12:00h.");
         System.out.println("Room No: " + roomNumber + " is successfully reserved");
     }
+    public static void cancelTheWrongReservationForUpdateARoom(int roomNumber){
+        for(int i=roomNumber-1; i<100; i+=10){
+            if(safeStartDaysArr[i]!=0 && safeStartDaysArr[i+1]==0){
+                safeStartDaysArr[i]=0;
+                safeStartMonthsArr[i]=0;
+                safeStartYearsArr[i]=0;
+                safeEndDaysArr[i]=0;
+                safeEndMonthsArr[i]=0;
+                safeEndYearsArr[i]=0;
+            }
+        }
+    }
 
     public static void ListFreeRooms() {
         System.out.println("===========================================");
@@ -130,6 +156,7 @@ public class HotelPriBaiGosho {
             }
         }
     }
+
 
 
     public static void checkOut() {
@@ -202,50 +229,211 @@ public class HotelPriBaiGosho {
         System.out.println("The total number of nights spent in the hotel between " + dateFormat.format(startDate) + " and " + dateFormat.format(endDate) + " is " + totalDays);
     }
 
+    public static void findRoom() throws ParseException {
+        System.out.println("=============================================");
+        System.out.println("           FIND A ROOM");
+        System.out.println("=============================================");
+        Scanner scanner = new Scanner(System.in);
 
-    class Room {
-        private int roomNumber;
-        private Date startDate;
-        private Date endDate;
-        private String information;
+        System.out.print("Enter the start day of the period (dd.MM.yyyy): ");
+        Date startDate = dateFormat.parse(scanner.nextLine());
 
-        public Room(int roomNumber, Date startDate, Date endDate, String information) {
-            this.roomNumber = roomNumber;
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.information = information;
+        System.out.print("Enter the end day of the period (dd.MM.yyyy): ");
+        Date endDate = dateFormat.parse(scanner.nextLine());
+
+        boolean found = false;
+        for (Room room : roomList) {
+            if ((room.getStartDate().before(endDate) || room.getStartDate().equals(endDate))
+                    && (room.getEndDate().after(startDate) || room.getEndDate().equals(startDate))) {
+                System.out.println("Room No: " + room.getRoomNumber() + " is reserved from "
+                        + dateFormat.format(room.getStartDate()) + " to " + dateFormat.format(room.getEndDate()));
+                found = true;
+            }
         }
 
-        public int getRoomNumber() {
-            return roomNumber;
+        if (!found) {
+            System.out.println("No reservations found for the specified period!");
         }
+    }
+    public static void printTheSelectionsForUpdateARoom() {
+        System.out.println("=========================================");
+        System.out.println("             UPDATE A ROOM");
+        System.out.println("=========================================");
+        System.out.println("THESE ARE THE ADDITIONAL SERVICES OFFERED BY OUR HOTEL");
+        System.out.println("1. Baby cot");
+        System.out.println("2. With breakfast");
+        System.out.println("3. Three-meal courses");
+        System.out.println("4. Overlooking the sea");
+        System.out.println("5. Overlooking the mountain");
+        System.out.println("6. Overlooking the courtyard");
+    }
+    public static void updateRoom(int roomNumber) throws ParseException {
+        printTheSelectionsForUpdateARoom();
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Please, enter your choice here(1-6) -> ");
+        byte addChoice = scan.nextByte();
+        switch (addChoice){
+            case 1 -> {
+                babyCot(roomNumber);
+            }
+            case 2 ->{
+                withBreakfast(roomNumber);
+            }
+            case 3 ->{
+                threeCourseMeal(roomNumber);
+            }
+            case 4 ->{
+                overlookingAtTheSea(roomNumber);
 
-        public Date getStartDate() {
-            return startDate;
+            }
+            case 5 ->{
+                OverlookingTheMountain(roomNumber);
+            }
+            case 6 ->{
+                OverlookingTheCourtyard(roomNumber);
+            }
+            default -> {
+                System.out.println("        INVALID INPUT!");
+                System.out.println("Now enter the information again!");
+                updateRoom(roomNumber);
+            }
         }
+    }
+    public static void babyCot(int roomNumber) {
+        System.out.println("*********************************");
+        System.out.println("     YOU CHOSE -> BABY COT");
+        System.out.println("*********************************");
+        for(int i=roomNumber; i<100; i+=10){
+            if(safeStartDaysArr[i]==0) {
+                additionalServices[i] = " baby cot ";
+            }
+        }
+    }
+    public static void withBreakfast(int roomNumber) {
+        System.out.println("***********************************************");
+        System.out.println("  YOU CHOSE -> RESERVATION WITH BREAKFAST");
+        System.out.println("************************************************");
+        for(int i=roomNumber; i<100; i+=10){
+            if(safeStartDaysArr[i]==0){
+                additionalServices[i] = " breakfast ";
+            }
+        }
+    }
+    public static void threeCourseMeal(int roomNumber) {
+        System.out.println("******************************************************");
+        System.out.println("   YOU CHOSE -> RESERVATION BREAKFAST AND DINNER ");
+        System.out.println("******************************************************");
+        for(int i=roomNumber; i<100; i+=10){
+            if(safeStartDaysArr[i]==0){
+                additionalServices[i] = " breakfast and dinner ";
+            }
+        }
+    }
+    public static void overlookingAtTheSea(int roomNumber) throws ParseException {
+        System.out.println("*******************************************");
+        System.out.println("    YOU CHOSE -> OVERLOOKING THE SEA");
+        System.out.println("    ROOMS NO: 1,5,7,10 HAVE A SEA VIEW");
+        System.out.println("*******************************************");
+        while(roomNumber!=1 && roomNumber!=5 && roomNumber!=7 && roomNumber!=10){
+            System.out.println("                    INVALID INPUT!");
+            System.out.println("            THE RESERVATION IS CANCELED");
+            System.out.println("        ROOMS NO: 1,5,7,10 HAVE A SEA VIEW");
+            System.out.println("ENTER THE INFORMATION ABOUT THE RESERVATION AGAIN!");
+            cancelTheWrongReservationForUpdateARoom(roomNumber);
+            makeReservation();
+        }
+        for(int i=roomNumber; i<100; i+=10){
+            if(safeStartDaysArr[i]==0){
+                additionalServices[i] = " sea view ";
+            }
+        }
+    }
+    public static void OverlookingTheMountain(int roomNumber) throws ParseException {
+        System.out.println("*******************************************");
+        System.out.println("    YOU CHOSE -> OVERLOOKING THE MOUNTAIN");
+        System.out.println("     ROOMS NO: 2,3 HAVE A MOUNTAIN VIEW");
+        System.out.println("*******************************************");
+        makeReservation();
+        while(roomNumber!=2 && roomNumber!=3){
+            System.out.println("                    INVALID INPUT!");
+            System.out.println("            THE RESERVATION IS CANCELED");
+            System.out.println("         ROOMS NO: 2,4 HAVE A MOUNTAIN VIEW");
+            System.out.println("ENTER THE INFORMATION ABOUT THE RESERVATION AGAIN!");
+            cancelTheWrongReservationForUpdateARoom(roomNumber);
+            makeReservation();
+        }
+        for(int i=roomNumber; i<100; i+=10){
+            if(safeStartDaysArr[i]==0){
+                additionalServices[i] = " mountain view ";
+            }
+        }
+    }
+    public static void OverlookingTheCourtyard(int roomNumber) throws ParseException {
+        System.out.println("*********************************************");
+        System.out.println("    YOU CHOSE -> OVERLOOKING THE COURTYARD");
+        System.out.println("   ROOMS NO: 4,6,8,9 HAVE A COURTYARD VIEW");
+        System.out.println("*********************************************");
+        makeReservation();
+        while(roomNumber!=4 && roomNumber!=6 && roomNumber!=8 && roomNumber!=9){
+            System.out.println("               INVALID INPUT!");
+            System.out.println("         THE RESERVATION IS CANCELED");
+            System.out.println("     ROOMS NO: 4,6,8,9 HAVE A COURTYARD VIEW");
+            System.out.println("ENTER THE INFORMATION ABOUT THE RESERVATION AGAIN!");
+            cancelTheWrongReservationForUpdateARoom(roomNumber);
+            makeReservation();
+        }
+        for(int i=roomNumber; i<100; i+=10){
+            if(safeStartDaysArr[i]==0){
+                additionalServices[i] = " courtyard view ";
+            }
+        }
+    }
 
-        public Date getEndDate() {
-            return endDate;
-        }
+}
 
-        public String getInformation() {
-            return information;
-        }
 
-        public void setRoomNumber(int roomNumber) {
-            this.roomNumber = roomNumber;
-        }
+class Room {
+    private int roomNumber;
+    private Date startDate;
+    private Date endDate;
+    private String information;
 
-        public void setStartDate(Date startDate) {
-            this.startDate = startDate;
-        }
+    public Room(int roomNumber, Date startDate, Date endDate, String information) {
+        this.roomNumber = roomNumber;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.information = information;
+    }
 
-        public void setEndDate(Date endDate) {
-            this.endDate = endDate;
-        }
+    public int getRoomNumber() {
+        return roomNumber;
+    }
 
-        public void setInformation(String information) {
-            this.information = information;
-        }
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
     }
 }
